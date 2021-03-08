@@ -1,0 +1,112 @@
+D:
+  act_params: {negative_slope: 0.2}
+  act_type: LRELU
+  input_residual: true
+  ndf: 64
+  scale_overhead: true
+  update_freq: 2
+  use_lsgan: true
+  warmup_epochs: 0
+  which_epoch: latest
+  which_model_netD: srgan
+G:
+  bn_size: 4
+  growth_rate: 12 #40
+  level_compression: -1
+  level_config:
+    - [8]
+    - [4]
+    - [2]
+  max_num_feature: 312
+  num_init_features: 80
+  ps_woReLU: false
+  res_factor: 0.2
+  residual_denseblock: true
+  vgg: [2, 4]
+  vgg_mean_pool: true
+  num_ip_channels: 4
+  lr_res: 40
+  num_classes: 3
+Discriminator:
+  level_config: [32, 32, 32]
+  num_op_v: 32
+data:
+  input_size: [48, 36, 24]
+  img_size: 1024
+  scale: [2, 4, 8]
+test:
+  dataset:
+    downscale: false
+    mean: [0.4488, 0.4371, 0.404]
+    #mean: [0.5, 0.5, 0.5]
+    path: '/SRData_Quad/co_test'
+    stddev: [0.0039215, 0.0039215, 0.0039215]
+    #stddev: [0.5, 0.5, 0.5]
+  fast_validation: -1
+train:
+  D_lr: 0.0001
+  batch_size: 1
+  dataset:
+    downscale: false
+    mean: [0.4488, 0.4371, 0.404]
+    #mean: [0.5, 0.5, 0.5]
+    path: '/SRData_Quad_small/co'
+    stddev: [0.0039215, 0.0039215, 0.0039215]
+    #stddev: [0.5, 0.5, 0.5]
+  epochs: 50
+  gan_loss_weight: 1
+  #growing_steps: [0.12, 0.25, 0.45, 0.65, 1.0]
+  #growing_steps: [0.18, 0.30, 0.50, 0.7, 1.0]
+  growing_steps: [0.16, 0.30, 0.52, 0.7, 1.0]
+  growing_steps1: [0.003, 0.005, 0.006, 0.018, 1.0]
+  #min_epochs: [0, 6, 8]
+  min_epochs: [ 2, 2, 2 ]
+  #max_epochs: [9, 18, 20]
+  max_epochs: [ 15, 15, 15 ]
+  io: {eval_epoch_freq: 10, print_errors_freq: 100, save_model_freq: 10, save_img_freq: 100}
+  l1_loss_weight: 0
+  lr: 0.0001
+  lr_decay: 0.5
+  # LR RATE CHANGE
+  lr_schedule_patience: 4
+  # TRAINING SHUTDOWN IF NO IMPROVEMENT
+  training_shutdown_patience: 12
+  smallest_lr: 1.0e-05
+  D_smallest_lr: 1.0e-06
+  D_lr_decay: 0.9
+  vgg_loss_weight: [0.5, 2]
+xtra:
+  img_tile_path: '/s/HOSTNAME/a/nobackup/galileo/stip-images/ALBUM/Sentinel-2/'
+  #img_tile_path: '/s/HOSTNAME/a/nobackup/galileo/sapmitra/SRImages/SR_Dan/'
+  num_inputs: 500
+  num_tests: 50
+  num_vals: 50
+  #num_inputs: 2
+  albums: ['co-3month','ca-3month','nv-3month']
+  out_path: '/boost_exp_g2'
+  #WHERE TRAINED MODELS ARE SAVED
+  chkpt_path: '/boost_exp_g2_light'
+  save_path: '/saved_images_g2'
+  test_save_path: '/tested_images_g2'
+  seed: 12
+  # DETERMINES INPUT SIZE
+  high_res: 320
+  tile_res: 40
+  img_type: '-3.tif'
+  file_sep: '/'
+  pyramid_levels: [11,12,13]
+edge_param:
+  g1_path: '/s/HOSTNAME/a/nobackup/galileo/sapmitra/SRImages/boost_exp_bk/'
+  smallest_lr: 1.0e-04
+  patience: 3
+  num_res_blocks: 8 #8
+  epochs: 10
+  save_img_freq: 400
+  print_err_freq: 50
+  #orig_img: '/s/chopin/e/proj/sustain/sapmitra/super_resolution/SRData_original'
+  #orig_img: '/s/chopin/e/proj/sustain/sapmitra/super_resolution/SRImages/train'
+  out_path: '/boost_exp_g2'
+  save_path: '/saved_images_g2'
+  test_save_path: '/tested_images_g2'
+  mask_grid_size: 2 #THIS IS THE REGION OUT OF A 4x OR 8x IMAGE THAT WILL BE HANDLED BY G2 AT A TIME
+
